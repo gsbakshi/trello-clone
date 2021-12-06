@@ -1,34 +1,54 @@
 import { useState } from 'react';
 
 import CustomCard from '../../components/card/card.component';
-import FLoatingButton from '../../components/floating-button/floating-button.component';
+import FloatingButton from '../../components/floating-button/floating-button.component';
+
+import TaskGroup from '../../utilities/task-group';
 
 import './homepage.styles.scss';
 
 const HomePage = () => {
-    const [taskGroups, setTaskGroups] = useState(['Default Task']);
+    const [taskGroups, setTaskGroups] = useState([new TaskGroup()]);
 
     const floatingClickHandler = () => {
-        const newTask = 'New Task';
+        const newTask = new TaskGroup();
         setTaskGroups([...taskGroups, newTask]);
     };
 
     const removeFromTaskGroups = (id) => {
+        const tmp = taskGroups.filter((taskGroup) => taskGroup.id !== id);
+        setTaskGroups([...tmp]);
+    };
+
+    const updateTitle = (taskGroupId, title) => {
         const tmp = [...taskGroups];
-        tmp.splice(id, 1);
+        tmp.filter((taskGroup) => taskGroup.id === taskGroupId)[0].title =
+            title;
+        setTaskGroups([...tmp]);
+    };
+
+    const updateTasks = (taskGroupId, tasks) => {
+        const tmp = [...taskGroups];
+        tmp.filter((taskGroup) => taskGroup.id === taskGroupId)[0].tasks =
+            tasks;
         setTaskGroups([...tmp]);
     };
 
     return (
         <div className='home-page'>
-            {taskGroups.map((task, index) => (
+            {taskGroups.map((taskGroup) => (
                 <CustomCard
-                    key={index}
-                    id={index}
+                    key={taskGroup.id}
+                    updateTitle={updateTitle}
+                    updateTasks={updateTasks}
                     deleteCardGroup={removeFromTaskGroups}
+                    taskGroup={taskGroup}
                 />
             ))}
-            <FLoatingButton onClickHandler={floatingClickHandler} />
+            <FloatingButton
+                onClickHandler={floatingClickHandler}
+                iconType='fa-plus'
+            />
         </div>
     );
 };
