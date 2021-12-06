@@ -18,7 +18,6 @@ const CustomCard = ({
 }) => {
     const [isInputTitle, setIsInputTitle] = useState(false);
     const [title, setTitle] = useState(taskGroup.title);
-    const [tasks, setTasks] = useState([...taskGroup.tasks]);
     const [task, setTask] = useState('');
 
     const inputTitleHandler = () => setIsInputTitle(!isInputTitle);
@@ -56,9 +55,13 @@ const CustomCard = ({
         newTask.content = task;
         const tmp = [...taskGroup.tasks];
         tmp.push(newTask);
-        setTasks([...tmp]);
-        updateTasks(taskGroup.id, tasks);
+        updateTasks(taskGroup.id, tmp);
         setTask('');
+    };
+
+    const deleteTask = (id) => {
+        const tmp = taskGroup.tasks.filter((task) => task.id !== id);
+        updateTasks(taskGroup.id, tmp);
     };
 
     const renderCardTitle = () => {
@@ -79,9 +82,13 @@ const CustomCard = ({
     };
 
     const renderTasks = () => {
-        return tasks.length > 0
-            ? tasks.map((task) => (
-                  <TaskCard key={task.id} content={task.content} />
+        return taskGroup.tasks.length > 0
+            ? taskGroup.tasks.map((task) => (
+                  <TaskCard
+                      key={task.id}
+                      taskProps={task}
+                      deleteTask={deleteTask}
+                  />
               ))
             : 'Add Some Tasks';
     };

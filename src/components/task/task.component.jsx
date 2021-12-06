@@ -3,9 +3,9 @@ import CustomInputBox from '../custom-input-box/custom-input-box.component';
 
 import './task.styles.scss';
 
-const TaskCard = ({ content }) => {
+const TaskCard = ({ taskProps, deleteTask }) => {
     const [isInputTask, setIsInputTask] = useState(false);
-    const [task, setTask] = useState(content);
+    const [task, setTask] = useState(taskProps.content);
 
     const editTitleHandler = () => setIsInputTask(!isInputTask);
 
@@ -24,12 +24,6 @@ const TaskCard = ({ content }) => {
         // updateTask(task.id, content);
     };
 
-    const deleteTask = (event) => {
-        event.preventDefault();
-        console.log('delete task');
-        // deleteCardGroup(taskProps.id);
-    };
-
     return isInputTask ? (
         <CustomInputBox
             input={task}
@@ -44,7 +38,10 @@ const TaskCard = ({ content }) => {
                 <button className='option' onClick={editTitleHandler}>
                     <i className='fas fa-pen'></i>
                 </button>
-                <button className='option' onClick={deleteTask}>
+                <button
+                    className='option'
+                    onClick={() => deleteTask(taskProps.id)}
+                >
                     <i className='fas fa-trash'></i>
                 </button>
             </div>
